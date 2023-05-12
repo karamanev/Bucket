@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import AWS, { AWSError } from 'aws-sdk';
 import { ListObjectsOutput } from 'aws-sdk/clients/s3';
+import toast from 'react-hot-toast';
+import { FileOrFolder } from '../Interfaces';
+import { FolderComponent } from '../Components';
 
 // Credentials from the task
 // const S3_BUCKET = 'interview-task-g-karamanev';
@@ -27,7 +30,8 @@ const myBucket = new AWS.S3({
 export const Bucket = () => {
   const [progress, setProgress] = useState(0);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [files, setFiles] = useState<string[] | null>(null);
+  const [fileNames, setFileNames] = useState<string[] | null>(null);
+  const [list, setList] = useState<FileOrFolder[]>([]);
 
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target?.files && e.target?.files[0]) {
@@ -41,7 +45,7 @@ export const Bucket = () => {
         ACL: 'public-read',
         Body: file,
         Bucket: S3_BUCKET,
-        Key: `prefix/${file.name}`
+        Key: `prefix/prefix/${file.name}`
       };
 
       myBucket
@@ -56,20 +60,7 @@ export const Bucket = () => {
   };
 
   function download() {
-    // myBucket.getObject().send((a, err) => {
-    //   console.log(a);
-    //   if (err) console.log(err);
-    // });
-
-    // myBucket.listBuckets().send((a, err) => {
-    //   console.log(a);
-    //   if (err) console.log(err);
-    // });
-
-    // myBucket.listObjects().send((a, err) => {
-    //   console.log(a);
-    //   if (err) console.log(err);
-    // });
+    toast('Downloading!');
 
     const a = function (err: AWSError, data: ListObjectsOutput) {
       console.log(err);
@@ -79,25 +70,51 @@ export const Bucket = () => {
 
         const a = data.Contents.map((a) => a.Key) as string[];
 
-        setFiles(a);
+        const result: any = [];
+
+        a.reduce(
+          (r, path) => {
+            path.split('/').reduce((o, name) => {
+              let temp = (o.children = o.children || []).find(
+                (q: any) => q.name === name
+              );
+              console.log(temp);
+
+              if (!temp) o.children.push((temp = { name }));
+              return temp;
+            }, r);
+            return r;
+          },
+          { children: result }
+        );
+
+        console.log(result as FileOrFolder[]);
+
+        setFileNames(a);
+        setList(result);
       }
     };
 
-    //    myBucket.listBuckets(a);
-
     myBucket.listObjects(a);
+
+    downloadFile();
+  }
+
+  console.log(list);
+
+  function downloadFile() {
+    //     myBucket.deleteObject(params: {Key: 'object.txt'}, );
+    //  /   myBucket.getObject()
   }
 
   return (
     <div>
       <div>File Upload Progress is {progress}%</div>
       <input type="file" onChange={handleFileInput} />
-      <button onClick={() => uploadFile(selectedFile)}>
-        {' '}
-                Upload to S3
-      </button>
+      <button onClick={() => uploadFile(selectedFile)}> Upload to S3</button>
       <button onClick={() => download()}> Download </button>;
-      <div>{files}</div>
+      <div>{fileNames}</div>
+      <FolderComponent data={list} />;
     </div>
   );
 };
