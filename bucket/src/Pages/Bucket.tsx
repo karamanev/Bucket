@@ -63,32 +63,12 @@ export const Bucket = () => {
     toast('Downloading!');
 
     const a = function (err: AWSError, data: ListObjectsOutput) {
-      console.log(err);
-      console.log(data);
       if (data.Contents) {
-        console.log(data.Contents);
-
         const a = data.Contents.map((a) => a.Key) as string[];
 
-        const result: any = [];
+        const result: FileOrFolder[] = mapFiles(a);
 
-        a.reduce(
-          (r, path) => {
-            path.split('/').reduce((o, name) => {
-              let temp = (o.children = o.children || []).find(
-                (q: any) => q.name === name
-              );
-              console.log(temp);
-
-              if (!temp) o.children.push((temp = { name }));
-              return temp;
-            }, r);
-            return r;
-          },
-          { children: result }
-        );
-
-        console.log(result as FileOrFolder[]);
+        console.log(result);
 
         setFileNames(a);
         setList(result);
@@ -118,3 +98,24 @@ export const Bucket = () => {
     </div>
   );
 };
+
+function mapFiles(a: string[]) {
+  const result: FileOrFolder[] = [];
+  a.reduce(
+    (r, path) => {
+      path.split('/').reduce((o, name) => {
+        let temp = (o.children = o.children || []).find(
+          (q: any) => q.name === name
+        );
+        console.log(temp);
+
+        if (!temp) o.children.push((temp = { name }));
+        return temp;
+      }, r);
+      return r;
+    },
+    { children: result }
+  );
+
+  return result;
+}
