@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import AWS, { AWSError } from 'aws-sdk';
-import { ListObjectsOutput, Object as AA } from 'aws-sdk/clients/s3';
+import { ListObjectsOutput } from 'aws-sdk/clients/s3';
 
 // Credentials from the task
 // const S3_BUCKET = 'interview-task-g-karamanev';
@@ -26,29 +26,33 @@ const myBucket = new AWS.S3({
 
 export const Bucket = () => {
   const [progress, setProgress] = useState(0);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [files, setFiles] = useState<string[] | null>(null);
 
-  const handleFileInput = (e: any) => {
-    setSelectedFile(e.target.files[0]);
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target?.files && e.target?.files[0]) {
+      setSelectedFile(e.target.files[0]);
+    }
   };
 
-  const uploadFile = (file: any) => {
-    const params = {
-      ACL: 'public-read',
-      Body: file,
-      Bucket: S3_BUCKET,
-      Key: `prefix/${file.name}`
-    };
+  const uploadFile = (file: File | null) => {
+    if (file) {
+      const params = {
+        ACL: 'public-read',
+        Body: file,
+        Bucket: S3_BUCKET,
+        Key: `prefix/${file.name}`
+      };
 
-    myBucket
-      .putObject(params)
-      .on('httpUploadProgress', (evt) => {
-        setProgress(Math.round((evt.loaded / evt.total) * 100));
-      })
-      .send((err) => {
-        if (err) console.log(err);
-      });
+      myBucket
+        .putObject(params)
+        .on('httpUploadProgress', (evt) => {
+          setProgress(Math.round((evt.loaded / evt.total) * 100));
+        })
+        .send((err) => {
+          if (err) console.log(err);
+        });
+    }
   };
 
   function download() {
