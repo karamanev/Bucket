@@ -1,15 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FileOrFolder } from '../Interfaces';
 
 interface Props {
   data: FileOrFolder[];
 }
+type ResultType = {
+  [key: string]: any;
+};
 
 export const FolderComponent = (props: Props) => {
-  console.log(props);
+  const [showNested, setShowNested] = useState<ResultType>({});
+  const toggleNested = (name: string) => {
+    setShowNested({ ...showNested, [name]: !showNested[name] });
+  };
 
   function download(e: any) {
     console.log(e);
+    console.log(typeof e);
 
     console.log(props.data[0].name);
   }
@@ -19,13 +26,20 @@ export const FolderComponent = (props: Props) => {
       {props.data.map((parent) => {
         return (
           <div key={parent.name}>
-            <span>{parent.name}</span>
-            {/* Base Condition and Rendering recursive component from inside itself */}
-            <div>
+            {parent.name}
+            {parent.children && (
+              <button onClick={() => toggleNested(parent.name)}>
+                {!showNested[parent.name] ? 'Open' : 'Close'}
+              </button>
+            )}
+            <div
+              style={{
+                display: !showNested[parent.name] ? 'none' : ''
+              }}
+            >
               {parent.children && <FolderComponent data={parent.children} />}
             </div>
-
-            <button onClick={(e) => download(e)}> download</button>
+            <button onClick={() => download(parent)}> download</button>
           </div>
         );
       })}

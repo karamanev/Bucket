@@ -88,19 +88,21 @@ export const Bucket = () => {
   }
 
   return (
-    <div>
-      <div>File Upload Progress is {progress}%</div>
-      <input type="file" onChange={handleFileInput} />
-      <button onClick={() => uploadFile(selectedFile)}> Upload to S3</button>
-      <button onClick={() => download()}> Download </button>;
-      <div>{fileNames}</div>
-      <FolderComponent data={list} />;
+    <div className="wrapper fadeInDown">
+      <div className="content">
+        <div>File Upload Progress is {progress}%</div>
+        <input type="file" onChange={handleFileInput} />
+        <button onClick={() => uploadFile(selectedFile)}> Upload to S3</button>
+        <button onClick={() => download()}> Download </button>;
+        <div>{fileNames}</div>
+        <FolderComponent data={list} />;
+      </div>
     </div>
   );
 };
 
 function mapFiles(a: string[]) {
-  const result: FileOrFolder[] = [];
+  const result: any = [];
   a.reduce(
     (r, path) => {
       path.split('/').reduce((o, name) => {
