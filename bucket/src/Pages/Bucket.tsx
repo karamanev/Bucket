@@ -3,7 +3,7 @@ import AWS, { AWSError } from 'aws-sdk';
 import { ListObjectsOutput } from 'aws-sdk/clients/s3';
 import toast from 'react-hot-toast';
 import { FileOrFolder } from '../Interfaces';
-import { FolderComponent } from '../Components';
+import { CurrentFolder, FoldersList } from '../Components';
 
 // Credentials from the task
 // const S3_BUCKET = 'interview-task-g-karamanev';
@@ -89,14 +89,22 @@ export const Bucket = () => {
 
   return (
     <div className="wrapper fadeInDown">
-      <div className="content">
+      <div className="content fadeIn second">
         <div>File Upload Progress is {progress}%</div>
         <input type="file" onChange={handleFileInput} />
         <button onClick={() => uploadFile(selectedFile)}> Upload to S3</button>
         <button onClick={() => download()}> Download </button>;
         <div>{fileNames}</div>
-        <FolderComponent data={list} />;
-      </div>
+        <FoldersList data={list} />;
+      </div>{' '}
+      <div className="content fadeIn third">
+        <div>File Upload Progress is {progress}%</div>
+        <input type="file" onChange={handleFileInput} />
+        <button onClick={() => uploadFile(selectedFile)}> Upload to S3</button>
+        <button onClick={() => download()}> Download </button>;
+        <div>{fileNames}</div>
+        <CurrentFolder data={list} />;
+      </div>{' '}
     </div>
   );
 };

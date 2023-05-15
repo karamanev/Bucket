@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FileOrFolder } from '../Interfaces';
+import { FoldersList } from './FoldersList';
 
 interface Props {
   data: FileOrFolder[];
@@ -8,7 +9,7 @@ type ResultType = {
   [key: string]: any;
 };
 
-export const FolderComponent = (props: Props) => {
+export const CurrentFolder = (props: Props) => {
   const [showNested, setShowNested] = useState<ResultType>({});
   const toggleNested = (name: string) => {
     setShowNested({ ...showNested, [name]: !showNested[name] });
@@ -37,7 +38,7 @@ export const FolderComponent = (props: Props) => {
                 display: !showNested[parent.name] ? 'none' : ''
               }}
             >
-              {parent.children && <FolderComponent data={parent.children} />}
+              {parent.children && <FoldersList data={parent.children} />}
             </div>
             <button onClick={() => download(parent)}> download</button>
           </div>

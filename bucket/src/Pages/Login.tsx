@@ -8,7 +8,7 @@ export const Login = () => {
   const [submitted, setSubmitted] = useState(false);
   const navigate = useNavigate();
 
-  function login(e: any) {
+  function login(e: React.MouseEvent<HTMLElement>) {
     e.preventDefault();
     setSubmitted(true);
   }

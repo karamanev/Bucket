@@ -1,1 +1,2 @@
-export * from './FolderComponent';
+export * from './FoldersList';
+export * from './CurrentFolder';
