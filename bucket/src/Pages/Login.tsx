@@ -1,24 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export const Login = () => {
+type Props = {
+  onLogged: (logged: boolean) => void;
+};
+
+export const Login = (props: Props) => {
   const [key, setKey] = useState('');
   const [secret, setSecret] = useState('');
   const [name, setName] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+
   const navigate = useNavigate();
 
   function login(e: React.MouseEvent<HTMLElement>) {
     e.preventDefault();
-    setSubmitted(true);
+    localStorage.setItem(
+      'data',
+      JSON.stringify({
+        S3_BUCKET: name,
+        accessKeyId: key,
+        secretAccessKey: secret
+      })
+    );
+    props.onLogged(true);
+    () => navigate('/bucket');
   }
-
-  useEffect(() => {
-    if (submitted) {
-      localStorage.setItem('data', JSON.stringify({ key, secret, name }));
-      navigate('/bucket');
-    }
-  }, [submitted]);
 
   return (
     <div className="wrapper fadeInDown">

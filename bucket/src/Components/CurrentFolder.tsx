@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FileOrFolder } from '../Interfaces';
-import { FoldersList } from './FoldersList';
 
 interface Props {
   data: FileOrFolder[];
@@ -38,9 +37,8 @@ export const CurrentFolder = (props: Props) => {
                 display: !showNested[parent.name] ? 'none' : ''
               }}
             >
-              {parent.children && <FoldersList data={parent.children} />}
+              {parent.children && <CurrentFolder data={parent.children} />}
             </div>
-            <button onClick={() => download(parent)}> download</button>
           </div>
         );
       })}

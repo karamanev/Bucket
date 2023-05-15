@@ -1,16 +1,22 @@
-import './App.css';
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Bucket, Login } from './Pages';
+import React, { useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
-import GuardedRoute from './Helpers/GuardedRoute';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import './App.css';
+import { BucketData } from './Interfaces';
+import { Bucket, Login } from './Pages';
 
 function App() {
-  const [isLogged, setLogged] = useState(false);
+  const [hasData, setData] = useState(false);
+  const [config, setConfig] = useState<null | BucketData>(null);
+  const [logged, setLogged] = React.useState(false);
 
   useEffect(() => {
-    setLogged(Boolean(localStorage.getItem('data')));
-  });
+    const data = localStorage.getItem('data');
+    if (data) {
+      setData(true);
+      setConfig(JSON.parse(data) as BucketData);
+    }
+  }, [logged]);
 
   return (
     <div className="App">
@@ -22,13 +28,18 @@ function App() {
           <Route
             path="/"
             element={
-              <GuardedRoute isLogged={isLogged}>
-                <Login />
-              </GuardedRoute>
+              !hasData ? (
+                <Login onLogged={() => setLogged(true)} />
+              ) : (
+                <Navigate to="/bucket" />
+              )
             }
           />
 
-          <Route path="/bucket" element={<Bucket />} />
+          <Route
+            path="/bucket"
+            element={config ? <Bucket config={config} /> : <Navigate to="/" />}
+          />
         </Routes>
       </BrowserRouter>
     </div>
