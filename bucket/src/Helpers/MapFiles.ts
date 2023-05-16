@@ -9,13 +9,20 @@ export default function mapFilesData(a: string[]) {
         if (!temp) {
           o.children.push((temp = { name }));
           o.isFolder = true;
+          const splitted = path.split('/');
+          console.log(splitted);
+
+          //          fix!!!!! if it is folder with only folders
+
+          o.path = splitted.slice(0, splitted.length - 1).join('/');
         }
         return temp;
       }, r);
       return r;
     },
-    { children: result, isFolder: false }
+    { children: result, isFolder: false, path: '' }
   );
+  console.log(result);
 
   return result;
 }

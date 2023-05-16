@@ -16,9 +16,6 @@ export const CurrentFolder = (props: Props) => {
 
   function download(e: any) {
     console.log(e);
-    console.log(typeof e);
-
-    console.log(props.data[0].name);
   }
 
   return (
@@ -45,3 +42,10 @@ export const CurrentFolder = (props: Props) => {
     </div>
   );
 };
+
+// <div>File Upload Progress is {progress}%</div>
+// <input type="file" onChange={handleFileInput} />
+// <button onClick={() => uploadFile(selectedFile)}>
+//   {' '}
+//   Upload to S3
+// </button>

@@ -26,20 +26,17 @@ export const Bucket = (props: Props) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [fileNames, setFileNames] = useState<string[] | null>(null);
   const [list, setList] = useState<FileOrFolder[]>([]);
+  const [folder, setFolder] = useState<Partial<FileOrFolder>[]>([]);
 
   useEffect(() => {
     const load = function (err: AWSError, data: ListObjectsOutput) {
       if (data.Contents) {
-        const fileNames = data.Contents.map((a) => a.Key) as string[];
+        const fileNames = data.Contents.map((data) => data.Key) as string[];
         setFileNames(fileNames);
-        console.log(fileNames);
-
         const result: FileOrFolder[] = mapFilesData(fileNames);
-        console.log(result);
         setList(result);
       }
     };
-
     myBucket.listObjects(load);
   }, []);
 
@@ -65,7 +62,7 @@ export const Bucket = (props: Props) => {
         ACL: 'public-read',
         Body: file,
         Bucket: props.config.S3_BUCKET,
-        Key: `prefix/prefix/prefixb/${file.name}`
+        Key: `new/new1/${file.name}`
       };
 
       myBucket
@@ -88,11 +85,11 @@ export const Bucket = (props: Props) => {
       <div className="content fadeIn second">
         <FoldersList data={list} show={(folder) => openFolder(folder)} />
       </div>
-      <div className="content fadeIn third">
+      <div className="content fadeIn third directory">
+        <CurrentFolder data={list} />
         <div>File Upload Progress is {progress}%</div>
         <input type="file" onChange={handleFileInput} />
         <button onClick={() => uploadFile(selectedFile)}> Upload to S3</button>
-        <CurrentFolder data={list} />;
       </div>
     </div>
   );
