@@ -3,6 +3,7 @@ import { FileOrFolder } from '../Interfaces';
 export default function mapFilesData(files: string[]) {
   // eslint-disable-next-line
   const result: any = [];
+
   files.reduce(
     (r, path) => {
       path.split('/').reduce((o, name) => {
@@ -34,7 +35,6 @@ export default function mapFilesData(files: string[]) {
   };
 
   updatePaths(result);
-  console.log(result);
 
   return result;
 }

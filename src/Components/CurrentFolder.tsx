@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 import { AiFillDelete, AiFillFileText, AiFillFolder } from 'react-icons/ai';
 
 import { AWSError } from 'aws-sdk';
@@ -21,6 +21,9 @@ export const CurrentFolder = (props: Props) => {
   const [newFolder, setNewFolder] = useState('');
   const [fileContent, setFileContent] = useState<string | null>(null);
 
+  const fileRef = useRef<HTMLInputElement>(null);
+  const firstFileRef = useRef<HTMLInputElement>(null);
+
   const handleFileInput = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target?.files && e.target?.files[0]) {
       setSelectedFile(e.target.files[0]);
@@ -38,33 +41,27 @@ export const CurrentFolder = (props: Props) => {
   };
 
   const deleteItem = (item: FileOrFolder) => {
-    // handle file or folder
-
     const params = {
       Bucket: props.name,
-      Key: `${props.data?.name}${newFolder ? `/${newFolder}` : ''}/${item.name}`
+      Key: item.path
     };
-    console.log(params);
-
     props.bucket.deleteObject(params, reload);
   };
 
-  // const added = (a: FileOrFolder) => {
-  //   console.log(a);
-  //   reload();
-  // };
-
   const reload = () => {
-    console.log('a');
     setProgress(0);
     setSelectedFile(null);
+    if (fileRef.current) {
+      fileRef.current.value = '';
+    }
+    if (firstFileRef.current) {
+      firstFileRef.current.value = '';
+    }
     setSelectedFirstFile(null);
     props.reload();
   };
 
   const uploadFile = (file: File | null, newFolder?: string) => {
-    console.log(props.data);
-
     if (file) {
       const Key = `${props.data?.path ? `${props.data?.path}/` : ''}${
         newFolder ? `${newFolder}/` : ''
@@ -77,7 +74,6 @@ export const CurrentFolder = (props: Props) => {
         Key
       };
 
-      console.log(params);
       props.bucket
         .putObject(params, reload)
         .on('httpUploadProgress', (evt) => {
@@ -130,16 +126,18 @@ export const CurrentFolder = (props: Props) => {
                       {parent.isFolder ? <AiFillFolder /> : <AiFillFileText />}
                     </div>
                     {parent.name}
-                    <span onClick={() => deleteItem(parent)}>
-                      {<AiFillDelete id="trash" />}
-                    </span>
+                    {!parent.isFolder && (
+                      <span onClick={() => deleteItem(parent)}>
+                        {<AiFillDelete id="trash" />}
+                      </span>
+                    )}
                   </div>
                 );
               })}
           </div>
           {props.data && props.data.children && (
             <div className="add-files">
-              <input type="file" onChange={handleFileInput} />
+              <input type="file" ref={fileRef} onChange={handleFileInput} />
               <button
                 disabled={!selectedFile}
                 onClick={() => uploadFile(selectedFile)}
@@ -158,7 +156,11 @@ export const CurrentFolder = (props: Props) => {
                 placeholder="Folder name"
                 onChange={(e) => setNewFolder(e.target.value)}
               />
-              <input type="file" onChange={handleFirstFileInput} />
+              <input
+                type="file"
+                ref={firstFileRef}
+                onChange={handleFirstFileInput}
+              />
               <button
                 disabled={!selectedFirstFile || !newFolder}
                 onClick={() => uploadFirstFile(selectedFirstFile)}
