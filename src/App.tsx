@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
 import { BucketData } from './Interfaces';
@@ -7,7 +7,7 @@ import { Bucket, Login } from './Pages';
 function App() {
   const [hasData, setData] = useState(false);
   const [config, setConfig] = useState<null | BucketData>(null);
-  const [logged, setLogged] = React.useState(false);
+  const [logged, setLogged] = useState(false);
 
   useEffect(() => {
     const data = localStorage.getItem('data');

@@ -6,13 +6,13 @@ type Props = {
 };
 
 export const Login = (props: Props) => {
-  const [key, setKey] = useState('');
-  const [secret, setSecret] = useState('');
-  const [name, setName] = useState('');
+  const [key, setKey] = useState<string>('');
+  const [secret, setSecret] = useState<string>('');
+  const [name, setName] = useState<string>('');
 
   const navigate = useNavigate();
 
-  function login(e: React.MouseEvent<HTMLElement>) {
+  const login = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     localStorage.setItem(
       'data',
@@ -24,7 +24,7 @@ export const Login = (props: Props) => {
     );
     props.onLogged(true);
     () => navigate('/bucket');
-  }
+  };
 
   return (
     <div className="wrapper fadeInDown">

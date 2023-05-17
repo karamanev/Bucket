@@ -12,12 +12,12 @@ type Props = {
 };
 
 export const Bucket = (props: Props) => {
-  const [list, setList] = useState<FileOrFolder[]>([]);
+  const [list, setList] = useState<FileOrFolder[] | null>(null);
   const [folder, setFolder] = useState<FileOrFolder | null>(null);
   const [reload, setReload] = useState<boolean>(false);
 
   useEffect(() => {
-    const load = function (err: AWSError, data: ListObjectsOutput) {
+    const load = (err: AWSError, data: ListObjectsOutput) => {
       if (data.Contents) {
         const fileNames = data.Contents.map((data) => data.Key) as string[];
         const result: FileOrFolder[] = mapFilesData(fileNames);
@@ -38,10 +38,6 @@ export const Bucket = (props: Props) => {
     region: REGION
   });
 
-  function selectFolder(folder: FileOrFolder) {
-    setFolder(folder);
-  }
-
   return (
     <div className="wrapper fadeInDown">
       <div className="content fadeIn second">
@@ -49,7 +45,7 @@ export const Bucket = (props: Props) => {
           <FoldersList
             data={list}
             selected={folder}
-            show={(folder) => selectFolder(folder)}
+            show={(folder) => setFolder(folder)}
             reload={() => setReload(!reload)}
           />
         )}
@@ -60,7 +56,7 @@ export const Bucket = (props: Props) => {
             data={folder}
             bucket={bucket}
             name={props.config.S3_BUCKET}
-            reload={() => setReload(!reload)}
+            reload={() => setFolder(folder)}
           />
         )}
       </div>
