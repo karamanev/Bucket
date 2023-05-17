@@ -14,7 +14,7 @@ type Props = {
 export const Bucket = (props: Props) => {
   const [list, setList] = useState<FileOrFolder[] | null>(null);
   const [folder, setFolder] = useState<FileOrFolder | null>(null);
-  const [reload, setReload] = useState<boolean>(false);
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const load = (err: AWSError, data: ListObjectsOutput) => {
@@ -56,7 +56,7 @@ export const Bucket = (props: Props) => {
             data={folder}
             bucket={bucket}
             name={props.config.S3_BUCKET}
-            reload={() => setFolder(folder)}
+            reload={() => setReload(!reload)}
           />
         )}
       </div>

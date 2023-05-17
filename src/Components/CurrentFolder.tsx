@@ -58,6 +58,7 @@ export const CurrentFolder = (props: Props) => {
       firstFileRef.current.value = '';
     }
     setSelectedFirstFile(null);
+    setNewFolder('');
     props.reload();
   };
 

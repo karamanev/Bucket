@@ -180,6 +180,11 @@ input[type='text']:placeholder {
   position: absolute;
   bottom: 0;
   margin-bottom: 20px;
+  text-align: center;
+}
+
+.add-files {
+  text-align: center;
 }
 
 #folder-name-input {
@@ -203,11 +208,12 @@ svg {
 
 .file {
   width: 120px;
-  display: inline-block;
+  height: 200px;
   padding: 20px;
+  display: inline-block;
   overflow-y: hidden;
   overflow-wrap: break-word;
-  height: 200px;
+  text-align: center;
 }
 
 .current-folder {
