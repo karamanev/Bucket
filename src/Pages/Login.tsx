@@ -29,7 +29,7 @@ export const Login = (props: Props) => {
   return (
     <div className="wrapper fadeInDown">
       <div className="content login">
-        <h2 className="active"> Sign In </h2>
+        <h2 className="login"> Sign In </h2>
 
         <form>
           <input
@@ -63,7 +63,7 @@ export const Login = (props: Props) => {
           <input
             type="submit"
             className="fadeIn fifth"
-            value="Open the Bucket"
+            value="Open"
             onClick={(e) => login(e)}
           />
         </form>

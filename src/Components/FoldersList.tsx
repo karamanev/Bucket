@@ -1,26 +1,51 @@
 import { useState } from 'react';
+import {
+  BsFolder,
+  BsFolderFill,
+  BsFolderMinus,
+  BsFolderPlus
+} from 'react-icons/bs';
 import { FileOrFolder } from '../Interfaces';
-
 interface Props {
   show: (folder: FileOrFolder) => void;
   data: FileOrFolder[];
+  selected: FileOrFolder | null;
+  reload: () => void;
 }
 type ResultType = {
+  // eslint-disable-next-line
   [key: string]: any;
 };
 
 export const FoldersList = (props: Props) => {
   const [showNested, setShowNested] = useState<ResultType>({});
-  const toggleNested = (name: string) => {
-    setShowNested({ ...showNested, [name]: !showNested[name] });
+  const [clickTimeout, setClickTimeout] = useState<NodeJS.Timeout | null>(null);
+
+  const handleClick = (
+    event: React.MouseEvent<HTMLElement>,
+    folder: FileOrFolder
+  ) => {
+    if (clickTimeout) {
+      clearTimeout(clickTimeout);
+    }
+    setClickTimeout(null);
+
+    if (event.detail === 1) {
+      setClickTimeout(
+        setTimeout(() => {
+          setShowNested({
+            ...showNested,
+            [folder.name]: !showNested[folder.name]
+          });
+        }, 200)
+      );
+    } else if (event.detail === 2) {
+      props.show(folder);
+    }
   };
 
-  function show(e: any) {
-    console.log(e);
-  }
-
   return (
-    <div style={{ paddingLeft: '20px' }}>
+    <div style={{ paddingLeft: '10%' }}>
       {props.data.map((parent) => {
         return (
           <div
@@ -29,13 +54,23 @@ export const FoldersList = (props: Props) => {
               display: parent.isFolder ? '' : 'none'
             }}
           >
-            {parent.name}
-            {parent.children?.filter((child) => child.isFolder).length && (
-              <button onClick={() => toggleNested(parent.name)}>
-                {!showNested[parent.name] ? 'Expand' : 'Collapse'}
-              </button>
-            )}
-            <button onClick={() => show(parent.name)}>Open</button>;
+            <div>
+              <span onClick={(event) => handleClick(event, parent)}>
+                {parent === props.selected ? (
+                  <BsFolderFill />
+                ) : !showNested[parent.name] &&
+                  parent.children?.filter((child) => child.isFolder).length ? (
+                    <BsFolderPlus />
+                  ) : parent.children?.filter((child) => child.isFolder)
+                    .length ? (
+                      <BsFolderMinus />
+                    ) : (
+                      <BsFolder />
+                    )}
+              </span>
+            </div>
+            <div className="folder-name">{parent.name}</div>
+
             <div
               style={{
                 display: !showNested[parent.name] ? 'none' : ''
@@ -44,9 +79,11 @@ export const FoldersList = (props: Props) => {
               {parent.children?.map((child) => child.children).length && (
                 <FoldersList
                   data={parent.children}
-                  show={(a) => {
-                    show(a);
+                  show={(item) => {
+                    props.show(item);
                   }}
+                  reload={props.reload}
+                  selected={props.selected}
                 />
               )}
             </div>

@@ -1,25 +1,27 @@
+:root {
+  --blue: #39ace7;
+  --bright: #f6f6f6;
+  --dark: #0d0d0d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 .App {
   text-align: center;
+  height: 100vh;
 }
 
-a {
-  color: #92badd;
-  display: inline-block;
-  text-decoration: none;
-  font-weight: 400;
-}
-
-h2 {
+.login {
   text-align: center;
   font-size: 16px;
   font-weight: 600;
   text-transform: uppercase;
   display: inline-block;
   margin: 40px 8px 10px 8px;
-  color: #cccccc;
+  color: var(--bright);
 }
-
-/* STRUCTURE */
 
 .wrapper {
   display: flex;
@@ -33,68 +35,69 @@ h2 {
 
 .content {
   border-radius: 10px 10px 10px 10px;
-  background: #fff;
+  background: var(--bright);
   padding: 30px;
-  width: 90%;
+  width: 40%;
   position: relative;
-  padding: 0px;
+  padding: 20px;
   box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
-  text-align: center;
+  text-align: left;
   min-height: 500px;
+  height: 80vh;
 }
 
 .login {
   max-width: 450px;
+  height: auto;
+  min-height: auto;
+  text-align: center;
 }
 
-/* TABS */
-
 h2.inactive {
-  color: #cccccc;
+  color: var(--bright);
 }
 
 h2.active {
-  color: #0d0d0d;
-  border-bottom: 2px solid #5fbae9;
+  color: var(--dark);
+  border-bottom: 2px solid var(--blue);
 }
-
-/* FORM TYPOGRAPHY*/
 
 input[type='button'],
 input[type='submit'],
-input[type='reset'] {
-  background-color: #56baed;
+input[type='file'],
+button {
+  background-color: var(--blue);
   border: none;
-  color: white;
-  padding: 15px 80px;
+  color: var(--bright);
   text-align: center;
   text-decoration: none;
   display: inline-block;
   text-transform: uppercase;
   font-size: 13px;
-  -webkit-box-shadow: 0 10px 30px 0 rgba(95, 186, 233, 0.4);
   box-shadow: 0 10px 30px 0 rgba(95, 186, 233, 0.4);
-  border-radius: 5px 5px 5px 5px;
-  margin: 5px 20px 40px 20px;
+  border-radius: 5px;
   transition: all 0.3s ease-in-out;
 }
 
-input[type='button']:hover,
-input[type='submit']:hover,
-input[type='reset']:hover {
-  background-color: #39ace7;
+input[type='button'],
+input[type='submit'] {
+  padding: 15px 80px;
+  margin: 5px 20px 40px 20px;
 }
 
-input[type='button']:active,
-input[type='submit']:active,
-input[type='reset']:active {
-  transform: scale(0.95);
+input[type='file'],
+button {
+  padding: 15px;
+  margin: 15px;
+}
+
+button:disabled {
+  background-color: var(--bright);
+  color: var(--dark);
 }
 
 input[type='text'] {
-  background-color: #f6f6f6;
-  border: none;
-  color: #0d0d0d;
+  color: var(--dark);
   padding: 15px 32px;
   text-align: center;
   text-decoration: none;
@@ -102,38 +105,24 @@ input[type='text'] {
   font-size: 16px;
   margin: 5px;
   width: 85%;
-  border: 2px solid #f6f6f6;
+  border: 2px solid var(--bright);
   transition: all 0.5s ease-in-out;
   border-radius: 5px 5px 5px 5px;
 }
 
 input[type='text']:focus {
-  background-color: #fff;
-  border-bottom: 2px solid #5fbae9;
+  background-color: var(--bright);
+  border-bottom: 2px solid var(--blue);
 }
 
 input[type='text']:placeholder {
-  color: #cccccc;
+  color: var(--bright);
 }
 
-/* ANIMATIONS */
-
-/* Simple CSS3 Fade-in-down Animation */
 .fadeInDown {
   animation-name: fadeInDown;
   animation-duration: 1s;
   animation-fill-mode: both;
-}
-
-@-webkit-keyframes fadeInDown {
-  0% {
-    opacity: 0;
-    transform: translate3d(0, -100%, 0);
-  }
-  100% {
-    opacity: 1;
-    transform: none;
-  }
 }
 
 @keyframes fadeInDown {
@@ -147,23 +136,6 @@ input[type='text']:placeholder {
   }
 }
 
-/* Simple CSS3 Fade-in Animation */
-@-webkit-keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@-moz-keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -200,40 +172,40 @@ input[type='text']:placeholder {
   animation-delay: 1.2s;
 }
 
-/* Simple CSS3 Fade-in Animation */
-.underlineHover:after {
-  display: block;
-  left: 0;
-  bottom: -10px;
-  width: 0;
-  height: 2px;
-  background-color: #56baed;
-  content: '';
-  transition: width 0.2s;
-}
-
-.underlineHover:hover {
-  color: #0d0d0d;
-}
-
-.underlineHover:hover:after {
-  width: 100%;
-}
-
-/* OTHERS */
-
 *:focus {
   outline: none;
 }
 
-#icon {
-  width: 60%;
+.add-folder {
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 20px;
 }
 
-* {
-  box-sizing: border-box;
+#folder-name-input {
+  width: auto;
 }
 
-.directory {
-  text-align: leftss;
+.folder-name {
+  margin-top: 5px;
+}
+
+svg {
+  transform: scale(2);
+  margin-top: 20px;
+  color: var(--blue);
+}
+
+#trash {
+  transform: scale(1) translateY(-16px);
+  position: absolute;
+}
+
+.file {
+  min-width: 120px;
+  padding-bottom: 20px;
+}
+
+.current-folder {
+  margin-left: 10%;
 }

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Toaster } from 'react-hot-toast';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
 import { BucketData } from './Interfaces';
@@ -21,9 +20,6 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <div>
-          <Toaster />
-        </div>
         <Routes>
           <Route
             path="/"
