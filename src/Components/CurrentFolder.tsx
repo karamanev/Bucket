@@ -15,10 +15,10 @@ interface Props {
 }
 
 export const CurrentFolder = (props: Props) => {
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState<number>(0);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedFirstFile, setSelectedFirstFile] = useState<File | null>(null);
-  const [newFolder, setNewFolder] = useState('');
+  const [newFolder, setNewFolder] = useState<string>('');
   const [fileContent, setFileContent] = useState<string | null>(null);
 
   const fileRef = useRef<HTMLInputElement>(null);
@@ -58,6 +58,7 @@ export const CurrentFolder = (props: Props) => {
       firstFileRef.current.value = '';
     }
     setSelectedFirstFile(null);
+    setNewFolder('');
     props.reload();
   };
 
@@ -85,7 +86,7 @@ export const CurrentFolder = (props: Props) => {
     }
   };
 
-  function openFile(item: FileOrFolder): void {
+  const openFile = (item: FileOrFolder) => {
     if (item.isFolder) {
       toast('Please open the folders from the left menu');
     } else {
@@ -101,7 +102,7 @@ export const CurrentFolder = (props: Props) => {
 
       props.bucket.getObject(params, mapContent);
     }
-  }
+  };
 
   return (
     <div className="current-folder">
